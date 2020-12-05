@@ -15,11 +15,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       
-      - name: Enter Backend Directory
-        run: cd backend
-      
       - name: Install Dependencies
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: cd backend && composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Login to Heroku
         env: 
@@ -37,9 +34,6 @@ jobs:
 
       - name: Set Heroku Database URL Variable
         run: heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL --app=${{ secrets.HEROKU_APP_NAME }})
-      
-      - name: Leave Backend Directory
-        run: cd ..
       
       - name: Deploy Backend Directory
         uses: s0/git-publish-subdir-action@develop
