@@ -21,7 +21,7 @@ jobs:
       - name: Login to Heroku
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku login
+        run: heroku container:login
       
       - name: Set Heroku Env Variables
         run: heroku config:set $(egrep -v '^#' .env.heroku | xargs)
