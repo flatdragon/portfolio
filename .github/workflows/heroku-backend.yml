@@ -44,5 +44,5 @@ jobs:
         env:
           REPO: self
           BRANCH: heroku-backend
-          FOLDER: ./
+          FOLDER: backend
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
