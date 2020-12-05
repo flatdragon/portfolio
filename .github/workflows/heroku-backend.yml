@@ -31,7 +31,7 @@ jobs:
         run: heroku config:set $(egrep -v '^#' .env.heroku | xargs) --app=${{ secrets.HEROKU_APP_NAME }}
       
       - name: Set Heroku App Key Variable
-        run: heroku config:set APP_KEY=$(php artisan key:generate --show)
+        run: heroku config:set APP_KEY=$(php artisan key:generate --show) --app=${{ secrets.HEROKU_APP_NAME }}
 
       - name: Set Heroku App URL Variable
         run: heroku config:set APP_URL=$(heroku apps:info --app=${{ secrets.HEROKU_APP_NAME }} --shell | grep web_url | cut -d= -f2)
