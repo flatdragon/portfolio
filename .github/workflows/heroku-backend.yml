@@ -34,10 +34,10 @@ jobs:
         run: heroku config:set APP_KEY=$(php artisan key:generate --show) --app=${{ secrets.HEROKU_APP_NAME }}
 
       - name: Set Heroku App URL Variable
-        run: heroku config:set APP_URL=$(heroku apps:info --app=${{ secrets.HEROKU_APP_NAME }} --shell | grep web_url | cut -d= -f2)
+        run: heroku config:set APP_URL=$(heroku apps:info --app=${{ secrets.HEROKU_APP_NAME }} --shell | grep web_url | cut -d= -f2) --app=${{ secrets.HEROKU_APP_NAME }}
 
       - name: Set Heroku Database URL Variable
-        run: heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL --app=${{ secrets.HEROKU_APP_NAME }})
+        run: heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL --app=${{ secrets.HEROKU_APP_NAME }}) --app=${{ secrets.HEROKU_APP_NAME }}
       
       - name: Deploy Backend Directory
         uses: s0/git-publish-subdir-action@develop
