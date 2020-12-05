@@ -22,22 +22,15 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Login to Heroku
+      - name: Set Heroku Env Variables
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:login
-      
-      - name: Set Heroku Env Variables
-        run: heroku config:set $(egrep -v '^#' .env.heroku | xargs) --app=${{ secrets.HEROKU_APP_NAME }}
-      
-      - name: Set Heroku App Key Variable
-        run: heroku config:set APP_KEY=$(php artisan key:generate --show) --app=${{ secrets.HEROKU_APP_NAME }}
-
-      - name: Set Heroku App URL Variable
-        run: heroku config:set APP_URL=$(heroku apps:info --app=${{ secrets.HEROKU_APP_NAME }} --shell | grep web_url | cut -d= -f2) --app=${{ secrets.HEROKU_APP_NAME }}
-
-      - name: Set Heroku Database URL Variable
-        run: heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL --app=${{ secrets.HEROKU_APP_NAME }}) --app=${{ secrets.HEROKU_APP_NAME }}
+        run: |
+          heroku container:login
+          heroku config:set $(egrep -v '^#' .env.heroku | xargs) --app=${{ secrets.HEROKU_APP_NAME }}
+          heroku config:set APP_KEY=$(php artisan key:generate --show) --app=${{ secrets.HEROKU_APP_NAME }}
+          heroku config:set APP_URL=$(heroku apps:info --app=${{ secrets.HEROKU_APP_NAME }} --shell | grep web_url | cut -d= -f2) --app=${{ secrets.HEROKU_APP_NAME }}
+          heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL --app=${{ secrets.HEROKU_APP_NAME }}) --app=${{ secrets.HEROKU_APP_NAME }}
       
       - name: Deploy Backend Directory
         uses: s0/git-publish-subdir-action@develop
