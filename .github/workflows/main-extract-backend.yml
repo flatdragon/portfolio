@@ -29,6 +29,12 @@ jobs:
           ref: backend
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        
-      - name: Check
-        run: ls
+
+      - name: Push Backend Sources to Target Branch
+        run: |
+          export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-6)
+          cp -rf main/backend backend
+          cd backend
+          git add .
+          git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
+          git push
