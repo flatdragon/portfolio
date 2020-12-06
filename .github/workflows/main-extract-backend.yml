@@ -9,16 +9,17 @@ on:
 jobs:
   extract:
     name: Extract Backend Sources
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - name: Checkout Main Sources
-        uses: actions/checkout@v2
 
+      - name: Checkout Repository Sources
+        uses: actions/checkout@v2
+        
       - name: Create Target Branch If Not Exists
-        run: git switch -c backend 
+        run: git switch -c backend
 
       - name: Push Backend Sources to Target Branch
-        uses: s0/git-publish-subdir-action@develop
+        uses: s0/git-publish-subdir-action@v2.4
         env:
           REPO: self
           BRANCH: backend
