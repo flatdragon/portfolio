@@ -23,7 +23,7 @@ jobs:
       - name: Touch Backend Branch
         run: |
           cd main
-          git switch -c --orphan backend
+          git switch -c backend
           git switch main
 
       - name: Checkout Backend Sources
