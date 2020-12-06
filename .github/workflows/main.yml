@@ -49,7 +49,7 @@ jobs:
           cd backend
           git pull --ff-only origin backend
           cp -a ../main/backend/. .
-          if git status --porcelain
+          if [[ `git status --porcelain` ]]
           then
             export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
             git add .
