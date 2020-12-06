@@ -45,7 +45,7 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
-          git pull origin backend
+          git pull --ff-only origin backend
           cp -a ../main/backend/. .
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           git add .
