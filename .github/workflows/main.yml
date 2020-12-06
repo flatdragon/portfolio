@@ -37,9 +37,8 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git switch -m backend
-          git rm -r *
           cd ..
           cp -rf main/backend backend
-          git add *
+          git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
           git push
