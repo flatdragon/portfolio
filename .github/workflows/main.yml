@@ -28,7 +28,12 @@ jobs:
       - name: Check
         run: |
           cd main
-          git branch --list backend
+          if [ `git branch --list backend` ]
+          then
+            echo 'NOT EXISTS'
+          else
+            echo 'EXISTS'
+          fi
 
       - name: Create Backend Branch
         run: |
