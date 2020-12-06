@@ -38,8 +38,8 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           cd ..
-          cp -rf main/backend backend
-          cd backend
+          cp -rf $PWD/main/backend $PWD/backend
+          cd backend && ls
           echo $PWD
           git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
