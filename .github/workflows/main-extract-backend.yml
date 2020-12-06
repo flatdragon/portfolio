@@ -21,7 +21,7 @@ jobs:
           path: main
         
       - name: Create Backend Branch If Not Exists
-        run: git switch -c backend
+        run: cd main && git switch -c backend
 
       - name: Checkout Repository Branch Sources
         uses: actions/checkout@v2
