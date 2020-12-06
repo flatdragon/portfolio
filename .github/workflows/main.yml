@@ -21,7 +21,7 @@ jobs:
           path: main
 
       - name: Create Backend Branch
-        if: ${{ $(git branch --list backend) == null }}
+        if: contains(['backend'], git branch --list)
         run: |
           git switch --orphan backend
           git commit --allow-empty -m "init backend branch"
