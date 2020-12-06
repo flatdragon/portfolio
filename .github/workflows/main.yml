@@ -30,7 +30,7 @@ jobs:
           cd backend
           git switch -c backend
           git rm -r *
-          cp -rf ../main/backend/* .
+          cp -a ../main/backend/. .
 
       - name: Test
         run: cd backend && cat .env.heroku   
