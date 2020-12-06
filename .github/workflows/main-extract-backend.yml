@@ -19,7 +19,7 @@ jobs:
         run: git switch -c backend
 
       - name: Push Backend Sources to Target Branch
-        uses: s0/git-publish-subdir-action@v2.4
+        uses: s0/git-publish-subdir-action@v2.4.0
         env:
           REPO: self
           BRANCH: backend
