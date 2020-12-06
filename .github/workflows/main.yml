@@ -20,18 +20,17 @@ jobs:
           ref: main
           path: main
 
-      - name: Touch Backend Branch
-        run: |
-          cd main
-          git switch -c backend
-          git switch main
-
       - name: Checkout Backend Sources
         uses: actions/checkout@v2
         with:
-          ref: backend
+          ref: main
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Touch Backend Branch
+        run: |
+          cd backend
+          git switch -c backend
 
       - name: Push Backend Sources to Backend Branch
         run: |
