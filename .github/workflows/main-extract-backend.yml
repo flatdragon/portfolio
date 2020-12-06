@@ -20,8 +20,8 @@ jobs:
           ref: main
           path: main
         
-      - name: Create Backend Branch If Not Exists
-        run: cd main && git switch -c backend
+      # - name: Create Backend Branch If Not Exists
+      #   run: cd main && git switch -c backend
 
       - name: Checkout Repository Branch Sources
         uses: actions/checkout@v2
@@ -29,14 +29,17 @@ jobs:
           ref: backend
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      
+      - name: Check
+        run: cd backend && ls
 
-      - name: Push Backend Sources to Target Branch
-        run: |
-          export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-6)
-          cp -rf main/backend backend
-          cd backend
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
-          git push
+      # - name: Push Backend Sources to Target Branch
+      #   run: |
+      #     export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-6)
+      #     cp -rf main/backend backend
+      #     cd backend
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git add .
+      #     git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
+      #     git push
