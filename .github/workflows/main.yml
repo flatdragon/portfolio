@@ -28,7 +28,7 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
-          if [ `git branch --list backend` ]; then git switch backend; else git switch --orphan backend; fi
+          if [ "git rev-parse --verify --quiet backend" ]; then git switch backend; else git switch --orphan backend; fi
           cp -a ../main/backend/. .
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           git config user.name github-actions
