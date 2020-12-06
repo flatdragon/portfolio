@@ -29,7 +29,7 @@ jobs:
         run: |
           cd backend
           git switch --orphan backend
-          git pull
+          git pull origin backend
           cp -a ../main/backend/. .
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           git config user.name github-actions
