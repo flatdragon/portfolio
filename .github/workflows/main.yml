@@ -21,10 +21,13 @@ jobs:
           path: main
 
       - name: Create Backend Branch
-        if: contains(['backend'], git branch --list)
         run: |
-          git switch --orphan backend
-          git commit --allow-empty -m "init backend branch"
+          if ! [ `git branch --list backend` ]
+          then 
+            git switch --orphan backend
+            git commit --allow-empty -m "init backend branch"
+          fi
+          
 
       - name: Checkout Backend Branch
         uses: actions/checkout@v2
