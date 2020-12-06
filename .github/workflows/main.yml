@@ -14,21 +14,23 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Checkout Main Sources
+      - name: Checkout Main Branch
         uses: actions/checkout@v2
         with:
           path: main
 
-      - name: Checkout Backend Sources
+      - name: Checkout Backend Branch
         uses: actions/checkout@v2
         with:
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Test
+      - name: Prepare Backend Branch before Update
         run: |
           cd backend
           git switch -c backend
           git rm -r *
           cp -rf ../main/backend/* .
-          cat .env.heroku   
+
+      - name: Test
+        run: cat .env.heroku   
