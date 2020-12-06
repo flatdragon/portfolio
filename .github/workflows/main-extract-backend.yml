@@ -35,6 +35,8 @@ jobs:
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-6)
           cp -rf main/backend backend
           cd backend
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
           git push
