@@ -28,7 +28,7 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
-          git switch --orphan backend
+          if [ `git branch --list backend` ]; then git switch --orphan backend; else git switch backend; fi
           git rm -r .
           cp -a ../main/backend/. .
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
