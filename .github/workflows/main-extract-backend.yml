@@ -7,19 +7,13 @@ on:
     branches: [ main ]
 
 jobs:
-
-  checkout:
-    name: Checkout Sources
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository Sources
-        uses: actions/checkout@main
-  
   extract:
     name: Extract Backend Sources
     runs-on: ubuntu-latest
-    needs: checkout
     steps:
+      - name: Checkout Main Sources
+        uses: actions/checkout@v2
+
       - name: Create Target Branch If Not Exists
         run: git switch -c backend 
 
