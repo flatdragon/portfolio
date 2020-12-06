@@ -25,12 +25,14 @@ jobs:
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Prepare Backend Branch before Update
+      - name: Update Backend Branch
         run: |
           cd backend
           git switch -c backend
           git rm -r *
           cp -a ../main/backend/. .
-
-      - name: Test
-        run: cd backend && cat .env.heroku   
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
+          git push
