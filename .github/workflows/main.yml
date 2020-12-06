@@ -23,7 +23,7 @@ jobs:
       - name: Checkout Backend Sources
         uses: actions/checkout@v2
         with:
-          ref: backend
+          ref: main
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
