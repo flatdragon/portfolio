@@ -32,3 +32,4 @@ jobs:
           FOLDER: ${SOURCES_FOLDER}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: extract backend sources from {sha}
+          SKIP_EMPTY_COMMITS: false
