@@ -40,6 +40,6 @@ jobs:
           cd ..
           cp -rf main/backend backend
           cd backend
-          git add .
+          git add *
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
           git push
