@@ -9,16 +9,14 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ubuntu-latest
-    steps:  
+    runs-on: ubuntu-20.04
+    steps:
 
       - name: Set Job Env Variables
         uses: allenevans/set-env@v2.0.0
         with:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
           ENV_FILE: .env.heroku.production
- 
+
       - name: Checkout Backend Sources
         uses: actions/checkout@v2
 
@@ -27,8 +25,8 @@ jobs:
 
       - name: Set Heroku Env Variables
         env:
-          HEROKU_API_KEY: ${HEROKU_API_KEY}
-          HEROKU_APP: ${HEROKU_APP}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
         run: |
           heroku container:login
           heroku config:set $(egrep -v '^#' ${ENV_FILE} | xargs)

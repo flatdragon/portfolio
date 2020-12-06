@@ -15,7 +15,6 @@ jobs:
       - name: Set Job Env Variables
         uses: allenevans/set-env@v2.0.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TARGET_BRANCH: backend
           SOURCES_FOLDER: backend
 
@@ -31,5 +30,5 @@ jobs:
           REPO: self
           BRANCH: ${TARGET_BRANCH}
           FOLDER: ${SOURCES_FOLDER}
-          GITHUB_TOKEN: ${GITHUB_TOKEN}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: extract backend sources from {sha}
