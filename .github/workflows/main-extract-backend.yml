@@ -20,8 +20,8 @@ jobs:
           ref: main
           path: main
         
-      # - name: Create Backend Branch If Not Exists
-      #   run: cd main && git switch -c backend
+      - name: Create Backend Branch If Not Exists
+        run: cd main && git switch -c backend
 
       - name: Checkout Repository Branch Sources
         uses: actions/checkout@v2
