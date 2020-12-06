@@ -28,5 +28,7 @@ jobs:
       - name: Test
         run: |
           cd backend
-          git switch -c --orphan backend
+          git switch -c backend
+          git rm -r *
+          cp -rf ../main/backend .
           ls          
