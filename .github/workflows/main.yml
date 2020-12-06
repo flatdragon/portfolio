@@ -18,14 +18,24 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create Backend Branch
-        run: git checkout --orphan backend
+        run: |
+          git checkout --orphan backend
+          git rm -rf .
+          git commit --allow-empty -m "init branch"
+          git push origin backend
 
       - name: Create Frontend Branch
-        run: git checkout --orphan frontend
+        run: |
+          git checkout --orphan frontend
+          git rm -rf .
+          git commit --allow-empty -m "init branch"
+          git push origin frontend
 
   extract-backend:
     name: Extract Backend Sources
     runs-on: ubuntu-20.04
+    needs:
+      - prepare-branches
     steps:
 
       - name: Checkout Main Sources
