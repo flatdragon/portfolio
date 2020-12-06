@@ -28,5 +28,5 @@ jobs:
       - name: Test
         run: |
           cd backend
-          git rm -r *
-          ls
+          git switch -c backend
+          ls          
