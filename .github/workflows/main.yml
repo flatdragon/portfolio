@@ -17,21 +17,13 @@ jobs:
       - name: Checkout Main Sources
         uses: actions/checkout@v2
         with:
-          ref: main
           path: main
 
       - name: Checkout Backend Sources
         uses: actions/checkout@v2
         with:
-          ref: main
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Touch Backend Branch
-        run: |
-          cd backend
-          git switch -c --orphan backend
-
-      - name: Push Backend Sources to Backend Branch
-        run: |
-          cd backend && ls
+      - name: Test
+        run: ls
