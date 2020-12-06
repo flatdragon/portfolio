@@ -33,4 +33,4 @@ jobs:
           cp -rf ../main/backend/* .
 
       - name: Test
-        run: cat .env.heroku   
+        run: cd backend && cat .env.heroku   
