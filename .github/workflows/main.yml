@@ -40,8 +40,8 @@ jobs:
   extract-backend:
     name: Extract Backend Sources
     runs-on: ubuntu-20.04
-    needs:
-      - prepare-branches
+    # needs:
+    #   - prepare-branches
     steps:
 
       - name: Checkout Main Sources
