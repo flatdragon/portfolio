@@ -26,4 +26,5 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Test
-        run: ls
+        run: |
+          cd backend && ls
