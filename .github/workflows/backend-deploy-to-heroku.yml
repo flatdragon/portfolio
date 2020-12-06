@@ -1,0 +1,36 @@
+name: Deploy Backend to Heroku
+
+on:
+  push:
+    branches: [ backend ]
+  pull_request:
+    branches: [ backend ]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:  
+
+      - name: Set Job Env Variables
+        uses: allenevans/set-env@v2.0.0
+        with:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
+          ENV_FILE: .env.heroku.production
+ 
+      - name: Checkout Backend Sources
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Set Heroku Env Variables
+        env:
+          HEROKU_API_KEY: ${HEROKU_API_KEY}
+          HEROKU_APP: ${HEROKU_APP}
+        run: |
+          heroku container:login
+          heroku config:set $(egrep -v '^#' ${ENV_FILE} | xargs)
+          heroku config:set APP_KEY=$(php artisan key:generate --show)
+          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)

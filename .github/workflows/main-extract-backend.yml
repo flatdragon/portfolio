@@ -1,4 +1,4 @@
-name: Extract Backend
+name: Extract Backend Sources
 
 on:
   push:
@@ -8,14 +8,16 @@ on:
 
 jobs:
   extract:
-    name: Extract Backend Sources
+    name: Extract
     runs-on: ubuntu-20.04
     steps:
 
       - name: Set Job Env Variables
         uses: allenevans/set-env@v2.0.0
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TARGET_BRANCH: backend
+          SOURCES_FOLDER: backend
 
       - name: Checkout Repository Sources
         uses: actions/checkout@v2
@@ -28,6 +30,6 @@ jobs:
         env:
           REPO: self
           BRANCH: ${TARGET_BRANCH}
-          FOLDER: backend
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MESSAGE: extract backend sources from {sha} commit
+          FOLDER: ${SOURCES_FOLDER}
+          GITHUB_TOKEN: ${GITHUB_TOKEN}
+          MESSAGE: extract backend sources from {sha}
