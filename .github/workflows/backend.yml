@@ -1,4 +1,4 @@
-name: Deploy Backend to Heroku
+name: Backend Branch Workflow
 
 on:
   push:

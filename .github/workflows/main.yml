@@ -1,4 +1,4 @@
-name: Extract Sources
+name: Main Branch Workflow
 
 on:
   push:
