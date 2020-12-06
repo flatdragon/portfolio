@@ -17,18 +17,26 @@ jobs:
       - name: Checkout Main Branch
         uses: actions/checkout@v2
         with:
+          ref: main
           path: main
+
+      - name: Create Backend Branch
+        if: $(git branch --list backend) == null
+        run: |
+          git switch --orphan backend
+          git commit --allow-empty -m "init backend branch"
 
       - name: Checkout Backend Branch
         uses: actions/checkout@v2
         with:
+          ref: backend
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Update Backend Branch
         run: |
           cd backend
-          if [ `git branch --list backend` ]; then git pull origin backend && git switch backend; else git switch --orphan backend; fi
+          git pull origin backend
           cp -a ../main/backend/. .
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           git config user.name github-actions
