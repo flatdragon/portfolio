@@ -30,15 +30,8 @@ jobs:
       - name: Touch Backend Branch
         run: |
           cd backend
-          git switch -c backend
+          git switch -c --orphan backend
 
       - name: Push Backend Sources to Backend Branch
         run: |
-          cp -rf ./main/backend ./backend
-          cd backend
-          ls
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
-          git push
+          cd backend && ls
