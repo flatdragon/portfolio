@@ -14,17 +14,21 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Checkout Repository Sources
+      - name: Checkout Repository Main Sources
         uses: actions/checkout@v2
+        with:
+          ref: main
+          path: main
         
-      - name: Create Target Branch If Not Exists
+      - name: Create Backend Branch If Not Exists
         run: git switch -c backend
 
-      - name: Push Backend Sources to Target Branch
-        uses: s0/git-publish-subdir-action@v2.4.0
-        env:
-          REPO: self
-          BRANCH: backend
-          FOLDER: backend
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          MESSAGE: extract backend sources from {sha}
+      - name: Checkout Repository Branch Sources
+        uses: actions/checkout@v2
+        with:
+          ref: backend
+          path: backend
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        
+      - name: Check
+        run: ls
