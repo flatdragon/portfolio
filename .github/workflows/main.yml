@@ -28,7 +28,6 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          if git show-ref --quiet refs/heads/backend
           if git branch --list backend
           then
             git switch --orphan backend
