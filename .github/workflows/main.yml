@@ -22,12 +22,12 @@ jobs:
 
       - name: Create Backend Branch
         run: |
+          cd main
           if ! [ `git branch --list backend` ]
-          then 
+          then
             git switch --orphan backend
             git commit --allow-empty -m "init backend branch"
           fi
-          
 
       - name: Checkout Backend Branch
         uses: actions/checkout@v2
