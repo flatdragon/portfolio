@@ -33,6 +33,7 @@ jobs:
             git switch --orphan backend
             git commit --allow-empty -m "init backend branch"
           fi
+          cd ..
 
       - name: Checkout Backend Branch
         uses: actions/checkout@v2
@@ -50,3 +51,4 @@ jobs:
           git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
           git push origin backend
+          cd ..
