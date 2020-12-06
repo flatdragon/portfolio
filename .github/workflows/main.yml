@@ -28,7 +28,7 @@ jobs:
       - name: Check
         run: |
           cd main
-          git show-ref --quiet refs/heads/backend
+          git branch --list backend
 
       - name: Create Backend Branch
         run: |
