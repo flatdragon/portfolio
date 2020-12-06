@@ -12,17 +12,22 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
+      - name: Set Job Env Variables
+        uses: allenevans/set-env@v2.0.0
+        with:
+          TARGET_BRANCH: backend
+
       - name: Checkout Repository Sources
         uses: actions/checkout@v2
         
       - name: Create Target Branch If Not Exists
-        run: git switch -c backend
+        run: git switch -c ${TARGET_BRANCH}
 
       - name: Push Backend Sources to Target Branch
         uses: s0/git-publish-subdir-action@v2.4.0
         env:
           REPO: self
-          BRANCH: backend
+          BRANCH: ${TARGET_BRANCH}
           FOLDER: backend
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: extract backend sources from {sha} commit
