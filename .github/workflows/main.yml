@@ -14,11 +14,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Setup GitHub Actions as Git User
-        run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
-
       - name: Checkout Main Branch
         uses: actions/checkout@v2
         with:
@@ -31,6 +26,8 @@ jobs:
           if [ `git branch --list backend` ]
           then
             git switch --orphan backend
+            git config user.name github-actions
+            git config user.email github-actions@github.com
             git commit --allow-empty -m "init backend branch"
             git push origin backend
             git switch main
@@ -54,6 +51,8 @@ jobs:
           then
             export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
             git add .
+            git config user.name github-actions
+            git config user.email github-actions@github.com
             git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
             git push origin backend
           else
