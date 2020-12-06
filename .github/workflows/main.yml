@@ -25,27 +25,18 @@ jobs:
           ref: main
           path: main
 
-      - name: Check
-        run: |
-          cd main
-          if [ `git branch --list backend` ]
-          then
-            echo 'NOT EXISTS'
-          else
-            echo 'EXISTS'
-          fi
-
       - name: Create Backend Branch
         run: |
           cd main
           if git show-ref --quiet refs/heads/backend
+          if git branch --list backend
           then
-            echo "Backend branch is exists."
-          else
             git switch --orphan backend
             git commit --allow-empty -m "init backend branch"
             git push origin backend
             git switch main
+          else
+            echo "Backend branch is exists."
           fi
 
       - name: Checkout Backend Branch
