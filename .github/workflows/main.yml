@@ -28,7 +28,7 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
-          git switch -c backend
+          git switch --orphan backend
           git rm -r .
           cp -a ../main/backend/. .
           export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
