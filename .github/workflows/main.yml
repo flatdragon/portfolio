@@ -20,27 +20,26 @@ jobs:
           ref: main
           path: main
 
+      - name: Touch Backend Branch
+        run: |
+          cd main
+          git switch -c backend
+          git switch main
+
       - name: Checkout Backend Sources
         uses: actions/checkout@v2
         with:
-          ref: main
+          ref: backend
           path: backend
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: Check
-        run: cd backend && ls
-
       - name: Push Backend Sources to Backend Branch
         run: |
-          export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          cp -rf ./main/backend ./backend
           cd backend
-          git switch -c backend
+          ls
           git config user.name github-actions
           git config user.email github-actions@github.com
-          cd ..
-          cp -rf $PWD/main/backend $PWD/backend
-          cd backend && ls
-          echo $PWD
           git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
           git push
