@@ -45,6 +45,6 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
-          cd ../main
+          cd ..
           ls
           
