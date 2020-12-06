@@ -36,4 +36,4 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
-          git push -u origin backend
+          git push origin backend
