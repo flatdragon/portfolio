@@ -14,11 +14,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Set Job Env Variables
-        uses: allenevans/set-env@v2.0.0
-        with:
-          ENV_FILE: .env.heroku.production
-
       - name: Checkout Backend Sources
         uses: actions/checkout@v2
 
@@ -31,6 +26,6 @@ jobs:
           HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
         run: |
           heroku container:login
-          heroku config:set $(egrep -v '^#' ${ENV_FILE} | xargs)
+          heroku config:set $(egrep -v '^#' .env.heroku.production | xargs)
           heroku config:set APP_KEY=$(php artisan key:generate --show)
           heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
