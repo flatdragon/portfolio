@@ -25,3 +25,4 @@ jobs:
           BRANCH: backend
           FOLDER: backend
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: extract backend sources from {sha} commit
