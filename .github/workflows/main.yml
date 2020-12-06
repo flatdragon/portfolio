@@ -23,7 +23,7 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          if [ `git branch --list backend` ]
+          if ! [ `git branch --list backend` ]
           then
             git switch --orphan backend
             git config user.name github-actions
