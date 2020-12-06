@@ -28,11 +28,11 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
-          git switch -c backend
+          git switch --orphan backend
           git rm -r *
           cp -a ../main/backend/. .
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
           git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
-          git push
+          git push -u origin backend
