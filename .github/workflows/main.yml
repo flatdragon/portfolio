@@ -34,6 +34,7 @@ jobs:
           else
             git switch --orphan backend
             git commit --allow-empty -m "init backend branch"
+            git push origin backend
             git switch main
           fi
 
