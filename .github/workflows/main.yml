@@ -31,4 +31,4 @@ jobs:
           git switch -c backend
           git rm -r *
           cp -rf ../main/backend/* .
-          ls          
+          cat .env.heroku   
