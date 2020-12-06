@@ -25,6 +25,11 @@ jobs:
           ref: main
           path: main
 
+      - name: Check
+        run: |
+          cd main
+          git show-ref refs/heads/backend
+
       - name: Create Backend Branch
         run: |
           cd main
