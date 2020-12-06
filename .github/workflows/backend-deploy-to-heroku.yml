@@ -2,9 +2,11 @@ name: Deploy Backend to Heroku
 
 on:
   push:
-    branches: [ backend ]
+    branches:
+      - backend
   pull_request:
-    branches: [ backend ]
+    branches:
+      - backend
 
 jobs:
   deploy:
