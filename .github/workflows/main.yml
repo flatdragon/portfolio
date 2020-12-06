@@ -9,39 +9,9 @@ on:
       - main
 
 jobs:
-  # prepare-branches:
-  #   name: Prepare Branches
-  #   runs-on: ubuntu-20.04
-  #   steps:
-
-  #     - name: Checkout Main Sources
-  #       uses: actions/checkout@v2
-      
-  #     - name: Set Fake Git Config
-  #     - run: |
-  #         git config user.name github-actions
-  #         git config user.email github-actions@github.com
-
-  #     - name: Remove Old Files
-  #     - run: git rm -rf .
-
-  #     - name: Create Backend Branch
-  #       run: |
-  #         git checkout --orphan backend
-  #         git commit --allow-empty -m "init branch"
-  #         git push origin backend
-
-  #     - name: Create Frontend Branch
-  #       run: |
-  #         git checkout --orphan frontend
-  #         git commit --allow-empty -m "init branch"
-  #         git push origin frontend
-
   extract-backend:
     name: Extract Backend Sources
     runs-on: ubuntu-20.04
-    # needs:
-    #   - prepare-branches
     steps:
 
       - name: Checkout Main Sources
