@@ -32,6 +32,7 @@ jobs:
           then
             git switch --orphan backend
             git commit --allow-empty -m "init backend branch"
+            git switch main
           fi
           cd ..
 
@@ -45,6 +46,11 @@ jobs:
       - name: Update Backend Branch
         run: |
           cd backend
+          git pull --ff-only origin backend
+          cp -a ../main/backend/. .
+          export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          git add .
+          git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
+          git push origin backend
           cd ..
-          ls
           
