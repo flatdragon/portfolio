@@ -74,7 +74,8 @@ jobs:
           then
             echo "Backend is up to date. Going to the next step..."
           else
-            git commit -am "deploy backend app from https://github.com/${REPO}/tree/${SHA}"
+            git add .
+            git commit -m "deploy backend app from https://github.com/${REPO}/tree/${SHA}"
             git push heroku master
           fi
 
