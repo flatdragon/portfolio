@@ -21,7 +21,7 @@ jobs:
     name: Deploy Backend to Heroku
     runs-on: ubuntu-20.04
     env:
-      HEROKU_APP: ${HEROKU_BACKEND_APP}
+      HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
     steps:
 
       - name: Checkout Main Branch
@@ -110,7 +110,7 @@ jobs:
     needs:
       - deploy-backend-to-heroku
     env:
-      HEROKU_APP: ${HEROKU_FRONTEND_APP}
+      HEROKU_APP: ${{ secrets.HEROKU_FRONTEND_APP }}
     steps:
 
       - name: Checkout Main Branch
