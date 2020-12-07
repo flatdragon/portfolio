@@ -42,12 +42,11 @@ jobs:
         with:
           ref: backend
           path: backend
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: 
 
       - name: Update Backend Branch (Conditionally)
         run: |
           cd backend
-          git config --list
           git pull --ff-only origin backend
           cp -a ../main/backend/. .
           git status --porcelain
@@ -61,5 +60,6 @@ jobs:
             git config user.name github-actions
             git config user.email github-actions@github.com
             git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
+            git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
             git push origin backend
           fi   
