@@ -47,6 +47,7 @@ jobs:
       - name: Update Backend Branch (Conditionally)
         run: |
           cd backend
+          git config --list
           git pull --ff-only origin backend
           cp -a ../main/backend/. .
           git status --porcelain
