@@ -32,11 +32,16 @@ jobs:
       - name: Check Backend Existence
         id: check_backend_existence
         run: |
-          [ -z "$(heroku apps:info --shell)" ] && RESULT="no" || RESULT="yes"
+          if [ -z "$(heroku apps:info --shell)" ]
+          then
+            RESULT="no"
+          else
+            RESULT="yes"
+          fi
           echo "::set-output name=result::$(echo ${RESULT})\n"
 
       - name: Create Backend App at Heroku (Conditionally)
-        if: steps.check_backend_existence.outputs.result == 'no'
+        if: steps.check_backend_existence.outputs.result == "no"
         run: |
           heroku apps:create $HEROKU_APP --region eu
           heroku addons:create heroku-postgresql:hobby-dev
