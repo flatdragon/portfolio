@@ -23,38 +23,5 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          if ! [ `git branch --list backend` ]
-          then
-            git switch --orphan backend
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit --allow-empty -m "init backend branch"
-            git push origin backend
-            git switch main
-          else
-            echo "Backend branch is exists."
-          fi
+          git branch --list backend
 
-      - name: Checkout Backend Branch
-        uses: actions/checkout@v2
-        with:
-          ref: backend
-          path: backend
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Update Backend Branch
-        run: |
-          cd backend
-          git pull --ff-only origin backend
-          cp -a ../main/backend/. .
-          if [[ `git status --porcelain` ]]
-          then
-            export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-            git add .
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
-            git push origin backend
-          else
-            echo "Backend branch is up to date."
-          fi      
