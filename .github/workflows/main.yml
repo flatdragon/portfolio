@@ -59,7 +59,7 @@ jobs:
           heroku maintenance:on
           heroku config:set APP_ENV="staging"
 
-      - name: Commit Backend Changes
+      - name: Push Backend Changes to Heroku
         run: |
           cd deployment
           
