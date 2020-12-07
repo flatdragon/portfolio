@@ -24,7 +24,7 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          git fetch origin backend 2>/dev/null
+          git fetch --all
           if [ -z "git branch --list backend" ]
           then
             echo "BACKEND NOT EXISTS"
