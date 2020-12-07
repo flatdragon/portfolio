@@ -26,9 +26,10 @@ jobs:
       - name: Get Heroku App Env Variables
         run: |
           heroku container:login
-          export APP_KEY=$(heroku config:get APP_KEY)
-          export APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
-          export DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+          APP_KEY=$(heroku config:get APP_KEY)
+          APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
+          DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+          echo $APP_KEY
       
       - name: Print Current Heroku Env
-        run: printenv
+        run: echo $APP_KEY
