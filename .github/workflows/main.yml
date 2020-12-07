@@ -24,4 +24,4 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          echo "$(git branch --all)"
+          echo "$(git branch -av)"
