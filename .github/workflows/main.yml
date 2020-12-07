@@ -24,4 +24,9 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          git ls-remote --heads origin backend
+          if git ls-remote --heads origin backend
+          then
+            echo "EXISTS"
+          else
+            echo "NOT EXISTS"
+          fi
