@@ -12,21 +12,25 @@ env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
 jobs:
-
   deploy-backend-app-to-heroku:
     name: Deploy Backend to Heroku
     runs-on: ubuntu-20.04
     env:
       HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
+      REPO: ${{ github.repository }}
+      SHA: $(echo "${{ github.sha }}" | cut -c1-7)
     steps:
 
       - name: Checkout Main Branch
         uses: actions/checkout@v2
+        with:
+          path: sources
 
-      - name: Prepare Heroku and Deploy
+      - name: Login to Heroku
+        run: heroku container:login
+
+      - name: Create Backend App at Heroku (Conditionally)
         run: |
-          heroku container:login
-
           if [ -z "$(heroku apps:info --shell)" ]
           then
             echo "Backend app doesn't exists. Start creating..."
@@ -34,52 +38,68 @@ jobs:
             heroku addons:create heroku-postgresql:hobby-dev
             heroku buildpacks:add heroku/php
             heroku buildpacks:add heroku/nodejs
-            echo "Backend app is successfully created. Keep deploying..."
+            echo "Backend app is successfully created. Going to the next step..."
           else
-            echo "Backend app exists. Keep deploying..."
+            echo "Backend app exists. Going to the next step..."
           fi
 
-          heroku maintenance:on
-          heroku config:set APP_ENV="staging"
-          
-          repo=${{ github.repository }}
-          sha=$(echo "${{ github.sha }}" | cut -c1-7)
- 
-          cd backend
+      - name: Create Temporary Directory for Deployment
+        run: mkdir deployment
 
+      - name: Connect Heroku Git
+        working_directory: deployment
+        run: |
           git init
           git config user.name github-actions
           git config user.email github-actions@github.com
           git remote add heroku https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APP}.git
 
+      - name: Enter Maintenance Mode at Heroku
+        run: |
+          heroku maintenance:on
+          heroku config:set APP_ENV="staging"
+
+      - name: Make Initial Commit (Conditionally)
+        working_directory: deployment
+        run: |
           if [ -z "$(git ls-remote --heads heroku master)" ]
           then
             git commit --allow-empty -m "init project"
             git push heroku master
           fi
 
-          git fetch heroku master
-          git stash
+      - name: Commit Backend Changes
+        working_directory: backend
+        run: |
           git pull --ff-only heroku master
-          git stash apply
-          git add .
-          git commit -am "deploy backend app from https://github.com/${repo}/tree/${sha}"
-          git push heroku master
+          cp -a ../sources/backend/. .
+          if [ -z "$(git status --porcelain)" ]
+          then
+            echo "Backend is up to date. Going to the next step..."
+          else
+            git commit -am "deploy backend app from https://github.com/${REPO}/tree/${SHA}"
+            git push heroku master
+          fi
+
+      - name: Set Backend Env Variables
+        working_directory: backend
+        run: |
+          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
 
           if [ -z "$(heroku config:get APP_KEY)" ]
           then
             heroku config:set APP_KEY=$(heroku run php artisan key:generate --show)
           fi
 
-          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
-
           if [ -z "$(heroku config:get DATABASE_URL)" ]
           then
             heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
           fi
 
-          heroku run php artisan migrate
+      - name: Migrate Database
+        run: heroku run php artisan migrate
 
+      - name: Leave Maintenance Mode at Heroku
+        run: |
           heroku config:set APP_ENV="production"
           heroku maintenance:off
-
