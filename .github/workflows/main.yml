@@ -26,10 +26,18 @@ jobs:
       - name: Get Heroku App Env Variables
         run: |
           heroku container:login
+
+          if [ -z "$(heroku apps:info --shell)" ]
+          then
+            echo "Backend app doesn't exists. Starting create..."
+            heroku apps:create $HEROKU_APP --region eu
+            heroku addons:create heroku-postgresql:hobby-dev
+            heroku buildpacks:add heroku/php
+            heroku buildpacks:add heroku/nodejs
+          fi
+
           APP_KEY=$(heroku config:get APP_KEY)
           APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
           DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+          
           echo $APP_KEY
-      
-      - name: Print Current Heroku Env
-        run: echo $APP_KEY
