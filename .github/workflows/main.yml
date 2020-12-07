@@ -13,8 +13,8 @@ env:
 
 jobs:
 
-  deploy-backend-app:
-    name: Deploy Backend App
+  deploy-backend-app-to-heroku:
+    name: Deploy Backend App to Heroku
     runs-on: ubuntu-20.04
     env:
       HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
@@ -23,7 +23,10 @@ jobs:
       - name: Checkout Main Branch
         uses: actions/checkout@v2
 
-      - name: Get Heroku App Env Variables
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Prepare Heroku and Deploy
         run: |
           heroku container:login
 
@@ -39,8 +42,30 @@ jobs:
             echo "Backend app exists. Keep deploying..."
           fi
 
-          APP_KEY=$(heroku config:get APP_KEY)
-          APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
-          DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+          heroku maintenance:on
+          heroku config:set APP_ENV="staging"
+
+          if [ -z "$(heroku config:get APP_KEY)" ]
+          then
+            heroku config:set APP_KEY=$(php artisan key:generate --show)
+          fi
+
+          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
+          heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
           
-          echo $APP_KEY
+          repo=${{ github.repository }}
+          sha=$(echo "${{ github.sha }}" | cut -c1-7)
+
+          cd backend
+
+          git init
+          git add .
+          git commit -m "deploy backend app from https://github.com/${repo}/tree/${sha}"
+          heroku git:remote
+          git push heroku master
+
+          heroku run php artisan migrate
+
+          heroku config:set APP_ENV="production"
+          heroku maintenance:off
+
