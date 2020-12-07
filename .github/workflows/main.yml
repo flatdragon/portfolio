@@ -23,9 +23,6 @@ jobs:
       - name: Checkout Main Branch
         uses: actions/checkout@v2
 
-      - name: Install Dependencies
-        run: cd backend && composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
       - name: Prepare Heroku and Deploy
         run: |
           heroku container:login
@@ -44,14 +41,6 @@ jobs:
 
           heroku maintenance:on
           heroku config:set APP_ENV="staging"
-
-          if [ -z "$(heroku config:get APP_KEY)" ]
-          then
-            heroku config:set APP_KEY="$(php artisan key:generate --show)"
-          fi
-
-          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
-          heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
           
           repo=${{ github.repository }}
           sha=$(echo "${{ github.sha }}" | cut -c1-7)
@@ -63,6 +52,14 @@ jobs:
           git commit -am "deploy backend app from https://github.com/${repo}/tree/${sha}"
           heroku git:remote
           git push heroku master
+
+          if [ -z "$(heroku config:get APP_KEY)" ]
+          then
+            heroku config:set APP_KEY="$(heroku run php artisan key:generate --show)"
+          fi
+
+          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
+          heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
 
           heroku run php artisan migrate
 
