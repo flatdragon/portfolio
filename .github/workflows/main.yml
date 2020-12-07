@@ -59,20 +59,17 @@ jobs:
           heroku maintenance:on
           heroku config:set APP_ENV="staging"
 
-      - name: Make Initial Commit (Conditionally)
-        run: |
-          cd deployment
-          if [ -z "$(git ls-remote --heads heroku master)" ]
-          then
-            git commit --allow-empty -m "init project"
-            git push heroku master
-          fi
-
       - name: Commit Backend Changes
         run: |
           cd deployment
-          git pull --ff-only heroku master
+          
+          if [ ! -z "$(git ls-remote --heads heroku master)" ]
+          then
+            git pull --ff-only heroku master
+          fi
+          
           cp -a ../sources/backend/. .
+
           if [ -z "$(git status --porcelain)" ]
           then
             echo "Backend is up to date. Going to the next step..."
