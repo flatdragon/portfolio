@@ -30,7 +30,6 @@ jobs:
         run: heroku container:login
 
       - name: Create Backend App at Heroku (Conditionally)
-        if: steps.check_backend_existence.outputs.
         run: |
           if [ -z "$(heroku apps:info --shell)" ]
           then
