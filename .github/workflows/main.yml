@@ -24,4 +24,4 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          git ls-remote --heads --quiet origin backend
+          git ls-remote --heads origin backend
