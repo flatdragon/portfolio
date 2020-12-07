@@ -85,7 +85,7 @@ jobs:
 
           if [ -z "$(heroku config:get APP_KEY)" ]
           then
-            heroku config:set APP_KEY=$(heroku run php artisan key:generate --show)
+            heroku config:set APP_KEY="$(heroku run php artisan key:generate --show)"
           fi
 
           if [ -z "$(heroku config:get DATABASE_URL)" ]
