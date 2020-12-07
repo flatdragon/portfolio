@@ -1,7 +1,6 @@
-name: Main Branch Workflow
+name: Main Workflow
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -9,58 +8,27 @@ on:
     branches:
       - main
 
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
 jobs:
-  extract-backend:
-    name: Extract Backend Sources
+
+  deploy-backend-app:
+    name: Deploy Backend App
     runs-on: ubuntu-20.04
+    env:
+      HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
     steps:
 
       - name: Checkout Main Branch
         uses: actions/checkout@v2
-        with:
-          ref: main
-          path: main
 
-      - name: Create Backend Branch (Conditionally)
+      - name: Get Heroku App Env Variables
         run: |
-          cd main
-          if [ -z "$(git ls-remote --heads origin backend)" ]
-          then
-            echo "Backend branch doesn't exists. Starting create..."
-            git switch --orphan backend
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit --allow-empty -m "init backend branch"
-            git push origin backend
-            git switch main
-          else
-            echo "Backend branch already exists. Skipping step..."
-          fi
-
-      - name: Checkout Backend Branch
-        uses: actions/checkout@v2
-        with:
-          ref: backend
-          path: backend
-
-      - name: Update Backend Branch (Conditionally)
-        run: |
-          cd backend
-          git pull --ff-only origin backend
-          cp -a ../main/backend/. .
-          git status --porcelain
-          if [ -z "$(git status --porcelain)" ]
-          then
-            echo "Backend branch is up to date. Skipping step..."
-          else
-            echo "Backend branch has changes. Starting update..."
-            export GITHUB_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-            git add .
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit -m "extract backend sources from ${GITHUB_SHORT_SHA}"
-            git remote show origin
-            git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
-            git remote show origin
-            git push origin backend
-          fi   
+          heroku container:login
+          export APP_KEY=$(heroku config:get APP_KEY)
+          export APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
+          export DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+      
+      - name: Print Current Heroku Env
+        run: printenv
