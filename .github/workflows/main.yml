@@ -23,5 +23,4 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          git branch --list backend
-
+          echo "git branch --list backend"
