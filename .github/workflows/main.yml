@@ -28,26 +28,21 @@ jobs:
 
       - name: Login to Heroku
         run: heroku container:login
-      
-      - name: Check Backend Existence
-        id: check_backend_existence
+
+      - name: Create Backend App at Heroku (Conditionally)
+        if: steps.check_backend_existence.outputs.
         run: |
           if [ -z "$(heroku apps:info --shell)" ]
           then
-            existence="not exists"
+            echo "Backend app doesn't exists. Start creating..."
+            heroku apps:create $HEROKU_APP --region eu
+            heroku addons:create heroku-postgresql:hobby-dev
+            heroku buildpacks:add heroku/php
+            heroku buildpacks:add heroku/nodejs
+            echo "Backend app is successfully created. Going to the next step..."
           else
-            existence="exists"
+            echo "Backend app exists. Going to the next step..."
           fi
-          echo "Backend app ${existence}."
-          echo "::set-output name=result::$(echo ${existence})\n"
-
-      - name: Create Backend App at Heroku (Conditionally)
-        if: contains(["not exists"], steps.check_backend_existence.outputs.result)
-        run: |
-          heroku apps:create $HEROKU_APP --region eu
-          heroku addons:create heroku-postgresql:hobby-dev
-          heroku buildpacks:add heroku/php
-          heroku buildpacks:add heroku/nodejs
 
       - name: Create Temporary Directory for Deployment
         run: mkdir deployment
