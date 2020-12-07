@@ -42,7 +42,6 @@ jobs:
         with:
           ref: backend
           path: backend
-          token: 
 
       - name: Update Backend Branch (Conditionally)
         run: |
