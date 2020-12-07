@@ -25,9 +25,4 @@ jobs:
         run: |
           cd main
           git fetch --all
-          if [ -z "git branch --list backend" ]
-          then
-            echo "BACKEND NOT EXISTS"
-          else
-            echo "BACKEND EXISTS"
-          fi
+          git branch --list backend
