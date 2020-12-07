@@ -21,8 +21,12 @@ jobs:
           ref: main
           path: main
 
+      - name: Check Backend Branch Existence
+        id: check-backend-branch-existence
+        run: echo "::set-output name=is-exists::$([ -z "$(cd main && git ls-remote --heads origin backend)" ])"
+
       - name: Create Backend Branch
-        if: ${{ $(cd main && [ -z "$(git ls-remote --heads origin backend)" ]) }}
+        if: steps.check-backend-branch-existence.outputs.is-exists
         run: |
           echo "NOT EXISTS"
           
