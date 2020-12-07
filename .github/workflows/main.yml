@@ -57,11 +57,15 @@ jobs:
 
           if [ -z "$(heroku config:get APP_KEY)" ]
           then
-            heroku config:set APP_KEY="$(heroku run php artisan key:generate --show)"
+            heroku config:set APP_KEY=$(heroku run php artisan key:generate --show)
           fi
 
           heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
-          heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+
+          if [ -z "$(heroku config:get DATABASE_URL)" ]
+          then
+            heroku config:set DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+          fi
 
           heroku run php artisan migrate
 
