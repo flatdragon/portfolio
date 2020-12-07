@@ -43,7 +43,7 @@ jobs:
           fi
 
           heroku maintenance:on
-          heroku config:set APP_ENV="staging"
+          heroku config:set APP_ENV=staging
 
           if [ -z "$(heroku config:get APP_KEY)" ]
           then
@@ -66,6 +66,6 @@ jobs:
 
           heroku run php artisan migrate
 
-          heroku config:set APP_ENV="production"
+          heroku config:set APP_ENV=production
           heroku maintenance:off
 
