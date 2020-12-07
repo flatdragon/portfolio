@@ -69,7 +69,7 @@ jobs:
           fi
 
       - name: Commit Backend Changes
-        working_directory: backend
+        working_directory: deployment
         run: |
           git pull --ff-only heroku master
           cp -a ../sources/backend/. .
