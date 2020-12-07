@@ -10,15 +10,18 @@ on:
 
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  HEROKU_BACKEND_APP: ${{ secrets.HEROKU_BACKEND_APP }}
+  HEROKU_FRONTEND_APP: ${{ secrets.HEROKU_FRONTEND_APP }}
+  REPO: ${{ github.repository }}
+  SHA: $(echo "${{ github.sha }}" | cut -c1-7)
 
 jobs:
-  deploy-backend-app-to-heroku:
+
+  deploy-backend-to-heroku:
     name: Deploy Backend to Heroku
     runs-on: ubuntu-20.04
     env:
-      HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
-      REPO: ${{ github.repository }}
-      SHA: $(echo "${{ github.sha }}" | cut -c1-7)
+      HEROKU_APP: ${HEROKU_BACKEND_APP}
     steps:
 
       - name: Checkout Main Branch
@@ -100,3 +103,76 @@ jobs:
         run: |
           heroku config:set APP_ENV="production"
           heroku maintenance:off
+
+  deploy-frontend-to-heroku:
+    name: Deploy Fronted to Heroku
+    runs-on: ubuntu-20.04
+    needs:
+      - deploy-backend-to-heroku
+    env:
+      HEROKU_APP: ${HEROKU_FRONTEND_APP}
+    steps:
+
+      - name: Checkout Main Branch
+        uses: actions/checkout@v2
+        with:
+          path: sources
+
+      - name: Login to Heroku
+        run: heroku container:login
+
+      - name: Create Frontend App at Heroku (Conditionally)
+        run: |
+          if [ -z "$(heroku apps:info --shell)" ]
+          then
+            echo "Frontend app doesn't exists. Start creating..."
+            heroku apps:create $HEROKU_APP --region eu
+            heroku buildpacks:add heroku/nodejs
+            echo "Frontend app is successfully created. Going to the next step..."
+          else
+            echo "Frontend app exists. Going to the next step..."
+          fi
+
+      - name: Create Temporary Directory for Deployment
+        run: mkdir deployment
+
+      - name: Connect to Heroku Git
+        run: |
+          cd deployment
+          git init
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git remote add heroku https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APP}.git
+
+      - name: Enter Maintenance Mode at Heroku
+        run: heroku maintenance:on
+
+      - name: Set Frontend Env Variables
+        run: |
+          heroku config:set BASE_API_URL=$(heroku apps:info --app ${HEROKU_FRONTEND_APP} --shell | grep web_url | cut -d= -f2)
+          heroku config:set NPM_CONFIG_PRODUCTION=false
+          heroku config:set HOST=0.0.0.0
+          heroku config:set NODE_ENV=production
+
+      - name: Push Frontend Changes to Heroku
+        run: |
+          cd deployment
+          
+          if [ ! -z "$(git ls-remote --heads heroku master)" ]
+          then
+            git pull --ff-only heroku master
+          fi
+          
+          cp -a ../sources/frontend/. .
+
+          if [ -z "$(git status --porcelain)" ]
+          then
+            echo "Frontend is up to date. Going to the next step..."
+          else
+            git add .
+            git commit -m "deploy frontend app from https://github.com/${REPO}/tree/${SHA}"
+            git push heroku master
+          fi
+
+      - name: Leave Maintenance Mode at Heroku
+        run: heroku maintenance:off
