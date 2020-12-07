@@ -14,7 +14,7 @@ env:
 jobs:
 
   deploy-backend-app-to-heroku:
-    name: Deploy Backend App to Heroku
+    name: Deploy Backend to Heroku
     runs-on: ubuntu-20.04
     env:
       HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: cd backend && composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Prepare Heroku and Deploy
         run: |
