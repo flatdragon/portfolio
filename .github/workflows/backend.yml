@@ -11,7 +11,7 @@ on:
 
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  HEROKU_APP: flatdragon-portfolio-backend
+  HEROKU_APP: ${{ secrets.HEROKU_BACKEND_APP }}
 
 jobs:
   deploy-to-heroku:
