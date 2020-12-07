@@ -22,7 +22,6 @@ jobs:
           path: main
 
       - name: Create Backend Branch
-        if: steps.check-backend-branch-existence.outputs.is-exists
         run: |
           cd main
           if [ -z "$(&& git ls-remote --heads origin backend)" ]
