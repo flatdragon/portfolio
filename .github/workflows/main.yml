@@ -25,4 +25,4 @@ jobs:
         run: |
           cd main
           git fetch --all
-          echo "$(git branch -av)"
+          echo "$(git branch --list)"
