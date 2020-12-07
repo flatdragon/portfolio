@@ -22,11 +22,7 @@ jobs:
           path: main
 
       - name: Create Backend Branch
+        if: ${{ cd main && [ -z "$(git ls-remote --heads origin backend)" ] }}
         run: |
-          cd main
-          if [ -z "$(git ls-remote --heads origin backend)" ]
-          then
-            echo "NOT EXISTS"
-          else
-            echo "EXISTS"
-          fi
+          echo "NOT EXISTS"
+          
