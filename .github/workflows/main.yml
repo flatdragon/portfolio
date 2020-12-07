@@ -21,15 +21,19 @@ jobs:
           ref: main
           path: main
 
-      - name: Test
-        run: echo [ -z "$(cd main && git ls-remote --heads origin backend)" ]
-
-      - name: Check Backend Branch Existence
-        id: check-backend-branch-existence
-        run: echo "::set-output name=is-exists::$([ -z "$(cd main && git ls-remote --heads origin backend)" ])"
-
       - name: Create Backend Branch
         if: steps.check-backend-branch-existence.outputs.is-exists
         run: |
-          echo "NOT EXISTS"
-          
+          cd main
+          if [ -z "$(&& git ls-remote --heads origin backend)" ]
+          then
+            echo "Backend branch doesn't exists. Starting creation..."
+            git switch --orphan backend
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git commit --allow-empty -m "init backend branch"
+            git push origin backend
+            git switch main
+          else
+            echo "Backend branch already exists. Skipping step..."
+          fi
