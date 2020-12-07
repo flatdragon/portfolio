@@ -29,11 +29,14 @@ jobs:
 
           if [ -z "$(heroku apps:info --shell)" ]
           then
-            echo "Backend app doesn't exists. Starting create..."
+            echo "Backend app doesn't exists. Start creating..."
             heroku apps:create $HEROKU_APP --region eu
             heroku addons:create heroku-postgresql:hobby-dev
             heroku buildpacks:add heroku/php
             heroku buildpacks:add heroku/nodejs
+            echo "Backend app is successfully created. Keep deploying..."
+          else
+            echo "Backend app exists. Keep deploying..."
           fi
 
           APP_KEY=$(heroku config:get APP_KEY)
