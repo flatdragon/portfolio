@@ -47,8 +47,8 @@ jobs:
         run: mkdir deployment
 
       - name: Connect Heroku Git
-        working_directory: deployment
         run: |
+          cd deployment
           git init
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -60,8 +60,8 @@ jobs:
           heroku config:set APP_ENV="staging"
 
       - name: Make Initial Commit (Conditionally)
-        working_directory: deployment
         run: |
+          cd deployment
           if [ -z "$(git ls-remote --heads heroku master)" ]
           then
             git commit --allow-empty -m "init project"
@@ -69,8 +69,8 @@ jobs:
           fi
 
       - name: Commit Backend Changes
-        working_directory: deployment
         run: |
+          cd deployment
           git pull --ff-only heroku master
           cp -a ../sources/backend/. .
           if [ -z "$(git status --porcelain)" ]
@@ -82,7 +82,6 @@ jobs:
           fi
 
       - name: Set Backend Env Variables
-        working_directory: backend
         run: |
           heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
 
