@@ -1,6 +1,9 @@
 name: Backend Branch Workflow
 
 on:
+  workflow_dispatch:
+    branches:
+      - backend
   push:
     branches:
       - backend
@@ -8,9 +11,13 @@ on:
     branches:
       - backend
 
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  HEROKU_APP: flatdragon-portfolio-backend
+
 jobs:
-  deploy:
-    name: Deploy
+  deploy-to-heroku:
+    name: Deploy to Heroku
     runs-on: ubuntu-20.04
     steps:
 
@@ -20,12 +27,12 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Set Heroku Env Variables
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP: flatdragon-portfolio-backend
+      - name: Get Heroku App Env Variables
         run: |
           heroku container:login
-          heroku config:set $(egrep -v '^#' .env.heroku.production | xargs)
-          heroku config:set APP_KEY=$(php artisan key:generate --show)
-          heroku config:set APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
+          export APP_KEY=$(heroku config:get APP_KEY)
+          export APP_URL=$(heroku apps:info --shell | grep web_url | cut -d= -f2)
+          export DATABASE_URL=$(heroku config:get HEROKU_POSTGRESQL)
+
+      - name: Print Current Heroku Env
+        run: printenv
