@@ -24,4 +24,4 @@ jobs:
       - name: Create Backend Branch
         run: |
           cd main
-          git ls-remote --heads git@github.com:${{ github.repository }}.git backend
+          git ls-remote --heads backend
